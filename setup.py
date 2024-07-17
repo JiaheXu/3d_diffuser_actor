@@ -13,7 +13,7 @@ core_requirements = [
     "flash_attn",
 ]
 
-setup(name='3docp',
+setup(name='diffuser_actor',
       version='0.1',
       description='3D object centric planning',
       author='Jiahe Xu',
@@ -21,6 +21,6 @@ setup(name='3docp',
       url='https://JiaheXu.github.io/',
       install_requires=core_requirements,
       packages=[
-            '3docp',
+            'diffuser_actor',
       ],
 )

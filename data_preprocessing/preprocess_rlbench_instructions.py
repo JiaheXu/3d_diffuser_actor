@@ -13,8 +13,8 @@ import transformers
 from tqdm.auto import tqdm
 import torch
 
-from utils.utils_with_rlbench import RLBenchEnv, task_file_to_task_class
-
+# from utils.utils_with_rlbench import RLBenchEnv, task_file_to_task_class
+# from utils.utils_with_rlbench import task_file_to_task_class
 
 Annotations = Dict[str, Dict[int, List[str]]]
 TextEncoder = Literal["bert", "clip"]
@@ -112,53 +112,53 @@ if __name__ == "__main__":
     model = load_model(args.encoder)
     model = model.to(args.device)
 
-    env = RLBenchEnv(
-        data_path="",
-        apply_rgb=True,
-        apply_pc=True,
-        apply_cameras=("left_shoulder", "right_shoulder", "wrist"),
-        headless=True,
-    )
+    # env = RLBenchEnv(
+    #     data_path="",
+    #     apply_rgb=True,
+    #     apply_pc=True,
+    #     apply_cameras=("left_shoulder", "right_shoulder", "wrist"),
+    #     headless=True,
+    # )
 
     instructions: Dict[str, Dict[int, torch.Tensor]] = {}
     tasks = set(args.tasks)
 
-    for task in tqdm(tasks):
-        task_type = task_file_to_task_class(task)
-        task_inst = env.env.get_task(task_type)._task
-        task_inst.init_task()
+    # for task in tqdm(tasks):
+    #     task_type = task_file_to_task_class(task)
+    #     task_inst = env.env.get_task(task_type)._task
+    #     task_inst.init_task()
 
-        instructions[task] = {}
+    #     instructions[task] = {}
 
-        variations = [v for v in args.variations if v < task_inst.variation_count()]
-        for variation in variations:
-            # check instructions among annotations
-            if task in annotations and variation in annotations[task]:
-                instr: Optional[List[str]] = annotations[task][variation]
-            # or, collect it from RLBench synthetic instructions
-            else:
-                instr = None
-                for i in range(3):
-                    try:
-                        instr = task_inst.init_episode(variation)
-                        break
-                    except:
-                        print(f"Cannot init episode {task}")
-                if instr is None:
-                    raise RuntimeError()
+    #     variations = [v for v in args.variations if v < task_inst.variation_count()]
+    #     for variation in variations:
+    #         # check instructions among annotations
+    #         if task in annotations and variation in annotations[task]:
+    #             instr: Optional[List[str]] = annotations[task][variation]
+    #         # or, collect it from RLBench synthetic instructions
+    #         else:
+    #             instr = None
+    #             for i in range(3):
+    #                 try:
+    #                     instr = task_inst.init_episode(variation)
+    #                     break
+    #                 except:
+    #                     print(f"Cannot init episode {task}")
+    #             if instr is None:
+    #                 raise RuntimeError()
 
-            if args.verbose:
-                print(task, variation, instr)
+    #         if args.verbose:
+    #             print(task, variation, instr)
 
-            tokens = tokenizer(instr, padding="max_length")["input_ids"]
-            lengths = [len(t) for t in tokens]
-            if any(l > args.model_max_length for l in lengths):
-                raise RuntimeError(f"Too long instructions: {lengths}")
+    #         tokens = tokenizer(instr, padding="max_length")["input_ids"]
+    #         lengths = [len(t) for t in tokens]
+    #         if any(l > args.model_max_length for l in lengths):
+    #             raise RuntimeError(f"Too long instructions: {lengths}")
 
-            tokens = torch.tensor(tokens).to(args.device)
-            with torch.no_grad():
-                pred = model(tokens).last_hidden_state
-            instructions[task][variation] = pred.cpu()
+    #         tokens = torch.tensor(tokens).to(args.device)
+    #         with torch.no_grad():
+    #             pred = model(tokens).last_hidden_state
+    #         instructions[task][variation] = pred.cpu()
 
     if args.zero:
         for instr_task in instructions.values():

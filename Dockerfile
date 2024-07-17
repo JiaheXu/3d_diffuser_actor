@@ -11,7 +11,7 @@ RUN apt update
 RUN apt install git python3.8 python3.8-dev python3.8-venv python3-pip python3-tk python-is-python3 -y && rm -rf /var/lib/apt/lists/*
 
 
-# RUN pip3 install torch==1.13.1+cu116 torchvision==0.14.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116
+RUN pip3 install torch==1.13.1+cu116 torchvision==0.14.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116
 
 RUN pip3 install --upgrade pip
 
@@ -50,4 +50,7 @@ RUN pip3 install packaging
 RUN pip3 install ninja
 RUN pip3 install flash-attn --no-build-isolation
 RUN pip3 install git+https://github.com/openai/CLIP.git@a9b1bf5
+RUN pip3 install open3d
 
+RUN apt update
+RUN apt-get install -y libgl1-mesa-dev libglib2.0-0
