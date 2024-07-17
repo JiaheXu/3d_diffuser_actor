@@ -13,9 +13,6 @@ from .utils import loader, Resize, TrajectoryInterpolator
 
 class RLBenchDataset(Dataset):
     """RLBench dataset."""
-
-# class Realworld_Dataset(Dataset):
-#     """Realworld  dataset."""
     def __init__(
         self,
         
