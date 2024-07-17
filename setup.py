@@ -13,14 +13,14 @@ core_requirements = [
     "flash_attn",
 ]
 
-setup(name='diffuser_actor',
+setup(name='3docp',
       version='0.1',
-      description='3D Diffuser Actor',
-      author='Nikolaos Gkanatsios',
-      author_email='ngkanats@cs.cmu.edu',
-      url='https://nickgkan.github.io/',
+      description='3D object centric planning',
+      author='Jiahe Xu',
+      author_email='xjh4438318846@gmail.com',
+      url='https://JiaheXu.github.io/',
       install_requires=core_requirements,
       packages=[
-            'diffuser_actor',
+            '3docp',
       ],
 )
