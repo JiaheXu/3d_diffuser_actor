@@ -86,6 +86,7 @@ if __name__ == "__main__":
         instructions['embeddings'].append(pred.cpu())
         instructions['text'].append(instr)
 
+    print("instructions: ", len(instructions["embeddings"]), instructions["embeddings"][0].shape)
     os.makedirs(str(args.output.parent), exist_ok=True)
     with open(args.output, "wb") as f:
         pickle.dump(instructions, f)

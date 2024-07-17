@@ -1,25 +1,25 @@
- main_dir=Actor_Real_15Demo_multitask
+main_dir=Actor_Real_15Demo_multitask
 
-dataset=/scratch/franka_demos/
-valset=/scratch/franka_demos/
+dataset=/ws/3d_diffuser_actor/realworld_demo/realworld_demo/data
+valset=/ws/3d_diffuser_actor/realworld_demo/realworld_demo/data
 
 lr=1e-4
 dense_interpolation=1
 interpolation_length=2
 num_history=1
 diffusion_timesteps=100
-B=32
+B=16
 C=120
 ngpus=1
 quaternion_format=wxyz
 
 CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
       main_trajectory.py \
-      --tasks close_box duck_in_bowls insert_peg_in_hole insert_peg_to_circle mouse_on_pad open_bottle open_pen press_stap
+      --tasks close_box duck_in_bowls insert_peg_in_hole insert_peg_to_circle mouse_on_pad open_bottle open_pen press_stap \
       --dataset $dataset \
       --valset $valset \
-      --instructions ./instructions/real/training.pkl \
-      --gripper_loc_bounds tasks/14_diffactor_real_tasks_location_bounds.json \
+      --instructions /ws/3d_diffuser_actor/realworld_demo/realworld_demo/instructions/training.pkl \
+      --gripper_loc_bounds /ws/3d_diffuser_actor/realworld_demo/realworld_demo/14_diffactor_real_tasks_location_bounds.json \
       --gripper_loc_bounds_buffer 0.04 \
       --num_workers 1 \
       --train_iters 200000 \
