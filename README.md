@@ -47,39 +47,55 @@ Create a conda environment with the following command:
 > pip install flash-attn --no-build-isolation
 ```
 
-### Install CALVIN locally
 
-Remember to use the latest `calvin_env` module, which fixes bugs of `turn_off_led`.  See this [post](https://github.com/mees/calvin/issues/32#issuecomment-1363352121) for detail.
+### train realworld demo locally
 ```
-> git clone --recurse-submodules https://github.com/mees/calvin.git
-> export CALVIN_ROOT=$(pwd)/calvin
-> cd calvin
-> cd calvin_env; git checkout main
-> cd ..
-> ./install.sh; cd ..
-```
+ main_dir=Actor_Real_15Demo_multitask
 
-### Install RLBench locally
-```
-# Install open3D
-> pip install open3d
+dataset=/scratch/franka_demos/
+valset=/scratch/franka_demos/
 
-# Install PyRep (https://github.com/stepjam/PyRep?tab=readme-ov-file#install)
-> git clone https://github.com/stepjam/PyRep.git 
-> cd PyRep/
-> wget https://www.coppeliarobotics.com/files/V4_1_0/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04.tar.xz
-> tar -xf CoppeliaSim_Edu_V4_1_0_Ubuntu20_04.tar.xz;
-> echo "export COPPELIASIM_ROOT=$(pwd)/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04" >> $HOME/.bashrc; 
-> echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$COPPELIASIM_ROOT" >> $HOME/.bashrc;
-> echo "export QT_QPA_PLATFORM_PLUGIN_PATH=\$COPPELIASIM_ROOT" >> $HOME/.bashrc;
-> source $HOME/.bashrc;
-> conda activate 3d_diffuser_actor
-> pip install -r requirements.txt; pip install -e .; cd ..
+lr=1e-4
+dense_interpolation=1
+interpolation_length=2
+num_history=1
+diffusion_timesteps=100
+B=32
+C=120
+ngpus=1
+quaternion_format=wxyz
 
-# Install RLBench (Note: there are different forks of RLBench)
-# PerAct setup
-> git clone https://github.com/MohitShridhar/RLBench.git
-> cd RLBench; git checkout -b peract --track origin/peract; pip install -r requirements.txt; pip install -e .; cd ..;
+CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
+      main_trajectory.py \
+      --tasks close_box duck_in_bowls insert_peg_in_hole insert_peg_to_circle mouse_on_pad open_bottle open_pen press_stap
+      --dataset $dataset \
+      --valset $valset \
+      --instructions ./instructions/real/training.pkl \
+      --gripper_loc_bounds tasks/14_diffactor_real_tasks_location_bounds.json \
+      --gripper_loc_bounds_buffer 0.04 \
+      --num_workers 1 \
+      --train_iters 200000 \
+      --embedding_dim $C \
+      --use_instruction 1 \
+      --rotation_parametrization 6D \
+      --diffusion_timesteps $diffusion_timesteps \
+      --val_freq 4000 \
+      --dense_interpolation $dense_interpolation \
+      --interpolation_length $interpolation_length \
+      --exp_log_dir $main_dir \
+      --batch_size $B \
+      --batch_size_val $B \
+      --cache_size 600 \
+      --cache_size_val 0 \
+      --keypose_only 1 \
+      --variations {0..0} \
+      --lr $lr\
+      --num_history $num_history \
+      --cameras front\
+      --max_episodes_per_task -1 \
+      --quaternion_format $quaternion_format \
+      --run_log_dir diffusion_multitask-C$C-B$B-lr$lr-DI$dense_interpolation-$interpolation_length-P$prediction_mode-H$num_history-DT$diffusion_timesteps
+
 ```
 
 Remember to modify the success condition of `close_jar` task in RLBench, as the original condition is incorrect.  See this [pull request](https://github.com/MohitShridhar/RLBench/pull/1) for more detail.  
