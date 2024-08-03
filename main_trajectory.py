@@ -37,7 +37,8 @@ class Arguments(tap.Tap):
     gripper_loc_bounds: Optional[str] = None
     gripper_loc_bounds_buffer: float = 0.04
     eval_only: int = 0
-
+    inference: int = 0
+    
     # Training and validation datasets
     dataset: Path
     valset: Path
@@ -193,6 +194,7 @@ class TrainTester(BaseTrainTester):
 
         # Backward pass
         loss = criterion.compute_loss(out)
+
         loss.backward()
 
         # Update

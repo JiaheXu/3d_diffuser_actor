@@ -142,6 +142,12 @@ class BaseTrainTester:
             )
             return model
 
+        # inference only
+        if bool(self.args.inference):
+            print("Inference.......")
+            model.eval()
+            return model
+
         # Training loop
         iter_loader = iter(train_loader)
         model.train()
