@@ -1,7 +1,6 @@
 main_dir=Actor_Real_right_hand_duck_in_the_bowl
 
 dataset=/ws/3d_diffuser_actor/aloha_data
-# valset=/ws/3d_diffuser_actor/aloha_data
 valset=/ws/3d_diffuser_actor/aloha_data_eval
 
 lr=1e-4
@@ -15,7 +14,9 @@ ngpus=1
 quaternion_format=xyzw
 
 CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
-      main_trajectory.py \
+      inference.py \
+      --checkpoint /ws/3dda_models/Aug01/best.pth \
+      --eval_only 1 \
       --tasks duck_in_bowls \
       --dataset $dataset \
       --valset $valset \
@@ -23,7 +24,7 @@ CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
       --gripper_loc_bounds /ws/3d_diffuser_actor/aloha_data/14_diffactor_real_tasks_location_bounds.json \
       --gripper_loc_bounds_buffer 0.04 \
       --num_workers 1 \
-      --train_iters 10000 \
+      --train_iters 2000 \
       --embedding_dim $C \
       --use_instruction 0 \
       --rotation_parametrization 6D \
@@ -44,5 +45,3 @@ CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
       --max_episodes_per_task -1 \
       --quaternion_format $quaternion_format \
       --run_log_dir diffusion_multitask-C$C-B$B-lr$lr-DI$dense_interpolation-$interpolation_length-P$prediction_mode-H$num_history-DT$diffusion_timesteps
-      # --checkpoint /ws/3dda_models/Aug01/best.pth \
-      # --inference 0 \
