@@ -7,7 +7,10 @@ import random
 from typing import Tuple, Optional
 
 import cv2
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
+
 import numpy as np
 import tap
 import torch
@@ -220,12 +223,14 @@ class TrainTester(BaseTrainTester):
         device = next(model.parameters()).device
         model.eval()
         data = []
-        data =  [ self.test_dataset.from_file("/ws/3d_diffuser_actor/aloha_data/duck_in_bowls+0/ep0.npy", "duck_in_bowls") ]
+        file_list = ["/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep15.npy", "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep16.npy", "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep17.npy"]
+        data =  [ self.test_dataset.from_file( file_list[0], "duck_in_bowls") ]
 
-        for i, sample in enumerate(data):
+        for i, file_dir in enumerate(file_list):
         # for i, sample in enumerate(loader):
             # for item in sample
-            
+            sample = self.test_dataset.from_file( file_dir, "duck_in_bowls")
+
             if i == val_iters:
                 break
 
@@ -246,11 +251,12 @@ class TrainTester(BaseTrainTester):
             sample["pcds"] = sample["pcds"].to(torch.float32)
             curr_gripper = curr_gripper.to(torch.float32)
 
-            print("sample[trajectory]: ", sample["trajectory"].dtype)
-            print("sample[rgbs]",sample["rgbs"].dtype)
-            print("sample[pcds]",sample["pcds"].dtype)
-            print("sample[instr]", sample["instr"].dtype)
-            print("curr_gripper: ", curr_gripper.dtype)
+            # print("sample[trajectory]: ", sample["trajectory"].dtype)
+            # print("sample[rgbs]",sample["rgbs"].dtype)
+            # print("sample[pcds]",sample["pcds"].dtype)
+            # print("sample[instr]", sample["instr"].dtype)
+            # print("curr_gripper: ", curr_gripper.dtype)
+            # print("sample[trajectory_mask]:", sample["trajectory_mask"].shape)
             
             action = model(
                 sample["trajectory"].to(device),
@@ -261,7 +267,12 @@ class TrainTester(BaseTrainTester):
                 curr_gripper.to(device),
                 run_inference=True
             )
-            print("action: ", action)
+            
+            print("action: ", action.shape)
+            action_np = action.cpu().numpy()
+            save_dir = "/ws/3d_diffuser_actor/aloha_data_eval/action/" + file_dir[-8:-4] + "_action"
+            np.save(save_dir, action_np)
+
             losses, losses_B = criterion.compute_metrics(
                 action,
                 sample["trajectory"].to(device),
@@ -285,15 +296,15 @@ class TrainTester(BaseTrainTester):
                         values[key] = torch.Tensor([]).to(device)
                     values[key] = torch.cat([values[key], l_task.unsqueeze(0)])
 
-            # Generate visualizations
-            if i == 0 and dist.get_rank() == 0 and step_id > -1:
-                viz_key = f'{split}-viz/viz'
-                viz = generate_visualizations(
-                    action,
-                    sample["trajectory"].to(device),
-                    sample["trajectory_mask"].to(device)
-                )
-                self.writer.add_image(viz_key, viz, step_id)
+            # Generate visualizations # might eb causing thread error
+            # if i == 0 and dist.get_rank() == 0 and step_id > -1:
+            #     viz_key = f'{split}-viz/viz'
+            #     viz = generate_visualizations(
+            #         action,
+            #         sample["trajectory"].to(device),
+            #         sample["trajectory_mask"].to(device)
+            #     )
+            #     self.writer.add_image(viz_key, viz, step_id)
 
         # Log all statistics
         values = self.synchronize_between_processes(values)

@@ -264,14 +264,14 @@ class TrainTester(BaseTrainTester):
                     values[key] = torch.cat([values[key], l_task.unsqueeze(0)])
 
             # Generate visualizations
-            if i == 0 and dist.get_rank() == 0 and step_id > -1:
-                viz_key = f'{split}-viz/viz'
-                viz = generate_visualizations(
-                    action,
-                    sample["trajectory"].to(device),
-                    sample["trajectory_mask"].to(device)
-                )
-                self.writer.add_image(viz_key, viz, step_id)
+            # if i == 0 and dist.get_rank() == 0 and step_id > -1:
+            #     viz_key = f'{split}-viz/viz'
+            #     viz = generate_visualizations(
+            #         action,
+            #         sample["trajectory"].to(device),
+            #         sample["trajectory_mask"].to(device)
+            #     )
+            #     self.writer.add_image(viz_key, viz, step_id)
 
         # Log all statistics
         values = self.synchronize_between_processes(values)

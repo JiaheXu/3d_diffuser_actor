@@ -5,7 +5,7 @@ valset=/ws/3d_diffuser_actor/aloha_data_eval
 
 lr=1e-4
 dense_interpolation=1
-interpolation_length=2
+interpolation_length=20
 num_history=1
 diffusion_timesteps=50
 B=15
@@ -15,7 +15,7 @@ quaternion_format=xyzw
 
 CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
       inference.py \
-      --checkpoint /ws/3dda_models/Aug01/best.pth \
+      --checkpoint /ws/3dda_models/Aug05/best.pth \
       --eval_only 1 \
       --tasks duck_in_bowls \
       --dataset $dataset \
