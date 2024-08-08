@@ -223,7 +223,7 @@ class TrainTester(BaseTrainTester):
         device = next(model.parameters()).device
         model.eval()
         data = []
-        file_list = ["/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep15.npy", "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep16.npy", "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep17.npy"]
+        file_list = ["/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep22.npy"]
         data =  [ self.test_dataset.from_file( file_list[0], "duck_in_bowls") ]
 
         for i, file_dir in enumerate(file_list):
@@ -270,11 +270,11 @@ class TrainTester(BaseTrainTester):
             
             print("action: ", action.shape)
             action_np = action.cpu().numpy()
-            save_dir = "/ws/3d_diffuser_actor/aloha_data_eval/action/" + file_dir[-8:-4] + "_action"
+            save_dir = "/ws/3d_diffuser_actor/3docp_data_eval/action/" + file_dir[-8:-4] + "_action"
             np.save(save_dir, action_np)
-
+            
             sample_action_np = sample["trajectory"].numpy()
-            sample_save_dir = "/ws/3d_diffuser_actor/aloha_data_eval/action/" + file_dir[-8:-4] + "_sample_action"
+            sample_save_dir = "/ws/3d_diffuser_actor/3docp_data_eval/action/" + file_dir[-8:-4] + "_sample_action"
             np.save(sample_save_dir, sample_action_np)
 
             losses, losses_B = criterion.compute_metrics(

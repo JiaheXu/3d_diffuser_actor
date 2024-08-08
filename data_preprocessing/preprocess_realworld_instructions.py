@@ -75,7 +75,7 @@ if __name__ == "__main__":
         'embeddings': [],
         'text': []
     }
-    instructions_string = "open the pen."
+    instructions_string = "mug_on_rack"
     for instr in tqdm(instructions_string):
         tokens = tokenizer(instr, padding="max_length")["input_ids"]
 
