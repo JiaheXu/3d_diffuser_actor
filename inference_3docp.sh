@@ -15,7 +15,8 @@ quaternion_format=xyzw
 
 CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
       inference_3docp.py \
-      --checkpoint /ws/3dda_models/Aug07_OCP/best.pth \
+      --relative_action 1 \
+      --checkpoint /ws/3dda_models/3docp/best.pth \
       --eval_only 1 \
       --tasks duck_in_bowls \
       --dataset $dataset \

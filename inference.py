@@ -223,7 +223,12 @@ class TrainTester(BaseTrainTester):
         device = next(model.parameters()).device
         model.eval()
         data = []
-        file_list = ["/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep15.npy", "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep16.npy", "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep17.npy"]
+        file_list = [
+                    "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep0.npy", 
+                    "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep1.npy", 
+                    "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep15.npy", 
+                    "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep16.npy", 
+                    "/ws/3d_diffuser_actor/aloha_data_eval/duck_in_bowls+0/ep17.npy"]
         data =  [ self.test_dataset.from_file( file_list[0], "duck_in_bowls") ]
 
         for i, file_dir in enumerate(file_list):

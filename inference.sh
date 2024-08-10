@@ -15,13 +15,13 @@ quaternion_format=xyzw
 
 CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
       inference.py \
-      --checkpoint /ws/3dda_models/Aug05/best.pth \
+      --checkpoint /ws/3dda_models/aloha/best.pth \
       --eval_only 1 \
       --tasks duck_in_bowls \
       --dataset $dataset \
       --valset $valset \
       --instructions /ws/3d_diffuser_actor/realworld_demo/realworld_demo/instructions/training.pkl \
-      --gripper_loc_bounds /ws/3d_diffuser_actor/aloha_data/14_diffactor_real_tasks_location_bounds.json \
+      --gripper_loc_bounds /ws/3d_diffuser_actor/aloha_data/bounds.json \
       --gripper_loc_bounds_buffer 0.04 \
       --num_workers 1 \
       --train_iters 2000 \
