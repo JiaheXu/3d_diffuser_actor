@@ -6,10 +6,10 @@ valset=/ws/3d_diffuser_actor/3docp_data_eval
 
 lr=1e-4
 dense_interpolation=1
-interpolation_length=5
+interpolation_length=20
 num_history=1
 diffusion_timesteps=50
-B=24
+B=25
 C=120
 ngpus=1
 quaternion_format=xyzw
@@ -24,7 +24,7 @@ CUDA_LAUNCH_BLOCKING=1 torchrun --nproc_per_node $ngpus --master_port $RANDOM \
       --gripper_loc_bounds /ws/3d_diffuser_actor/3docp_data/bounds.json \
       --gripper_loc_bounds_buffer 0.04 \
       --num_workers 1 \
-      --train_iters 100000 \
+      --train_iters 400000 \
       --embedding_dim $C \
       --use_instruction 0 \
       --rotation_parametrization 6D \

@@ -273,7 +273,7 @@ class TrainTester(BaseTrainTester):
                 run_inference=True
             )
             
-            print("action: ", action.shape)
+            print("action: ", action)
             action_np = action.cpu().numpy()
             save_dir = "/ws/3d_diffuser_actor/aloha_data_eval/action/" + file_dir[-8:-4] + "_action"
             np.save(save_dir, action_np)

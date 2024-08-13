@@ -224,11 +224,14 @@ class TrainTester(BaseTrainTester):
         model.eval()
         data = []
         file_list = [
+                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep0.npy",
                     "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep1.npy",
                     "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep2.npy",
-                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep18.npy",
-                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep25.npy",
-                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep31.npy",                
+                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep26.npy",
+                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep27.npy",
+                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep28.npy",                
+                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep29.npy",
+                    "/ws/3d_diffuser_actor/3docp_data_eval/duck_in_bowls+0/ep30.npy", 
                     ]
         data =  [ self.test_dataset.from_file( file_list[0], "duck_in_bowls") ]
 
